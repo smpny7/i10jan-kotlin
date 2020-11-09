@@ -20,11 +20,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val integrator = IntentIntegrator(this)
+        val integrator = IntentIntegrator(this).apply {
+            captureActivity = MyCaptureActivity::class.java
+        }
         integrator.setOrientationLocked(false)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
         integrator.setPrompt("名札をかざしてください")
-        integrator.setCameraId(0) // Use a specific camera of the device
+        integrator.setCameraId(1) // Use a specific camera of the device
 
         integrator.setOrientationLocked(false)
         integrator.setBeepEnabled(false)

@@ -12,10 +12,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HealthActivity"></activity>
+        <activity
+            android:name=".MyCaptureActivity"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".HealthActivity" />
         <activity
             android:name=".WelcomeActivity"
-            android:windowSoftInputMode="stateAlwaysVisible"></activity>
+            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
