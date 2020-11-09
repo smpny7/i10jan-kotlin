@@ -42,7 +42,6 @@ class HealthActivity : AppCompatActivity() {
                 fatigueSelected,
                 escapedRemarks
             )
-            nextButton.isClickable = true
         }
 
 

@@ -31,6 +31,7 @@ class WelcomeActivity : AppCompatActivity() {
         editBodyTemperature.requestFocus()
 
         nextButton.setOnClickListener {
+            nextButton.isClickable = false
             if (editBodyTemperature.text.toString().isNullOrEmpty()
                 || editBodyTemperature.text.toString().toDoubleOrNull() == null
                 || editBodyTemperature.text.toString().toDouble() < 35.0
