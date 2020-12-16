@@ -6,10 +6,8 @@ import android.os.Handler
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
-
 
 class HealthActivity : AppCompatActivity() {
     val handler = Handler()
@@ -18,7 +16,6 @@ class HealthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_health)
 
-        val nickname = intent.getStringExtra("nickname").toString()
         val memberKey = intent.getStringExtra("memberKey").toString()
         val bodyTemperature = intent.getStringExtra("bodyTemperature").toString()
 
@@ -96,21 +93,33 @@ class HealthActivity : AppCompatActivity() {
         remarks: String
     ) {
         val url =
-            "https://script.google.com/macros/s/AKfycbx6yZFhNkbSVhWOoTULLEonM6u2UIVjh0x4g53HJw/exec?func=insertNewData&member_key=$member_key&body_temperature=$body_temperature&physical_condition=$physical_condition&stifling=$stifling&fatigue=$fatigue&remarks=$remarks"
-        val MIMEType = MediaType.parse("application/json; charset=utf-8")
-        val requestBody = RequestBody.create(MIMEType, "{}")
+            "https://i10jan-api-test.herokuapp.com/v1.0/registerAction?member_key=$member_key&body_temperature=$body_temperature&physical_condition=$physical_condition&stifling=$stifling&fatigue=$fatigue&remarks=$remarks"
+        val mimeType = MediaType.parse("application/json; charset=utf-8")
+        val requestBody = RequestBody.create(mimeType, "{}")
         val request = Request.Builder().url(url).post(requestBody).build()
         val client = OkHttpClient()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                val jsonObject = JSONObject(body)
+                val jsonObject = JSONObject(body!!)
 
+                // -----------------------------------------------------------------------------------------
+                //      Return JSON
+                // -----------------------------------------------------------------------------------------
+                //    {
+                //        "success": true,    -> Whether there were any errors in the server processing.
+                //        "member": true,     -> Whether the user exists.
+                //        "left": false       -> Whether the exit process has already been completed.
+                //    }
+                // -----------------------------------------------------------------------------------------
+
+                val successFlag = jsonObject.getString("success").toString().toBoolean()
 
                 handler.post {
-                    if (jsonObject.getString("success") == "false") {
-                        Toast.makeText(applicationContext, "失敗しました", Toast.LENGTH_LONG).show()
+                    if (!successFlag) {
+                        Toast.makeText(applicationContext, "サーバでエラーが発生しました", Toast.LENGTH_LONG)
+                            .show()
                     } else {
                         Toast.makeText(applicationContext, "登録しました", Toast.LENGTH_LONG).show()
                         val intent = Intent(applicationContext, MainActivity::class.java)

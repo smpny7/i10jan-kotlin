@@ -3,13 +3,10 @@ package net.oucrc
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import okhttp3.*
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 
@@ -26,109 +23,86 @@ class MainActivity : AppCompatActivity() {
         integrator.setOrientationLocked(false)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
         integrator.setPrompt("名札をかざしてください")
-        integrator.setCameraId(1) // Use a specific camera of the device
+        integrator.setCameraId(1)
 
         integrator.setOrientationLocked(false)
         integrator.setBeepEnabled(false)
         integrator.setBarcodeImageEnabled(true)
         integrator.initiateScan()
+
+        // TODO: デバッグ用->削除
+        qrScannedAction("6n8urbrrsp")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         when {
             result != null -> {
-                userExistCheck(result.contents)
+                qrScannedAction(result.contents)
                 Toast.makeText(this, "通信しています...", Toast.LENGTH_LONG).show()
             }
             else -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
-    fun userExistCheck(member_key: String) {
+    private fun qrScannedAction(member_key: String) {
         val url =
-            "https://script.google.com/macros/s/AKfycbx6yZFhNkbSVhWOoTULLEonM6u2UIVjh0x4g53HJw/exec?func=getMember&member_key=$member_key"
-        val request = Request.Builder().url(url).build()
-        val client = OkHttpClient()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-                val jsonArray = JSONArray(body)
-
-                if (jsonArray.length() == 0) {
-                    handler.post {
-                        Toast.makeText(applicationContext, "ユーザーが存在しません", Toast.LENGTH_LONG).show()
-                    }
-                    return
-                }
-
-                handler.post {
-                    val jsonObject = jsonArray.getJSONObject(0)
-                    getCanLeave(
-                        jsonObject.getString("member_key"),
-                        jsonObject.getString("nickname")
-                    )
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                handler.post {
-                    Toast.makeText(applicationContext, "ネットワークに接続できません", Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-    }
-
-    fun getCanLeave(member_key: String, nickname: String) {
-        val url =
-            "https://script.google.com/macros/s/AKfycbx6yZFhNkbSVhWOoTULLEonM6u2UIVjh0x4g53HJw/exec?func=getCanLeave&member_key=$member_key"
-        val request = Request.Builder().url(url).build()
-        val client = OkHttpClient()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call?, response: Response?) {
-                val body = response?.body()?.string()
-
-                if (body == "true") {
-                    setOutTime(member_key)
-                } else {
-                    handler.post {
-                        val intent = Intent(applicationContext, WelcomeActivity::class.java)
-                        intent.putExtra("memberKey", member_key)
-                        intent.putExtra("nickname", nickname)
-                        startActivity(intent)
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call?, e: IOException?) {
-                handler.post {
-                    Toast.makeText(applicationContext, "ネットワークに接続できません", Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-    }
-
-    fun setOutTime(member_key: String) {
-        val url =
-            "https://script.google.com/macros/s/AKfycbx6yZFhNkbSVhWOoTULLEonM6u2UIVjh0x4g53HJw/exec?func=setOutTime&member_key=$member_key"
-        val MIMEType = MediaType.parse("application/json; charset=utf-8")
-        val requestBody = RequestBody.create(MIMEType, "{}")
+            "https://i10jan-api-test.herokuapp.com/v1.0/qrScannedAction?member_key=$member_key"
+        val mimeType = MediaType.parse("application/json; charset=utf-8")
+        val requestBody = RequestBody.create(mimeType, "{}")
         val request = Request.Builder().url(url).post(requestBody).build()
         val client = OkHttpClient()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call?, response: Response?) {
                 val body = response?.body()?.string()
-                val jsonObject = JSONObject(body)
+                val jsonObject = JSONObject(body!!)
 
-                handler.post {
-                    if (jsonObject.getString("success") == "false") {
-                        Toast.makeText(applicationContext, "退出処理に失敗しました", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(applicationContext, "退出しました", Toast.LENGTH_LONG).show()
+                // -----------------------------------------------------------------------------------------
+                //      Return JSON
+                // -----------------------------------------------------------------------------------------
+                //    {
+                //        "success": true,    -> Whether there were any errors in the server processing.
+                //        "member": true,     -> Whether the user exists.
+                //        "left": false       -> Whether the exit process has already been completed.
+                //    }
+                // -----------------------------------------------------------------------------------------
+
+                val successFlag = jsonObject.getString("success").toString().toBoolean()
+
+                if (!successFlag) {
+                    handler.post {
+                        Toast.makeText(applicationContext, "サーバでエラーが発生しました", Toast.LENGTH_LONG)
+                            .show()
                     }
+                    return
+                }
+
+                // If "success" is false, the "left" key does not exist.
+                val leftFlag = jsonObject.getString("left").toString().toBoolean()
+
+                if (leftFlag) {
+                    handler.post {
+                        Toast.makeText(applicationContext, "退室しました", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    return
+                }
+
+                val memberFlag = jsonObject.getString("member").toString().toBoolean()
+
+                if (memberFlag) {
+                    handler.post {
+                        val intent = Intent(applicationContext, WelcomeActivity::class.java)
+                        intent.putExtra("memberKey", member_key)
+                        startActivity(intent)
+                    }
+                } else {
+                    handler.post {
+                        Toast.makeText(applicationContext, "ユーザが存在しません", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    return
                 }
             }
 
