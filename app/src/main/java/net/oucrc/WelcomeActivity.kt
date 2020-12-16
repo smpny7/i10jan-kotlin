@@ -38,6 +38,7 @@ class WelcomeActivity : AppCompatActivity() {
                 || editBodyTemperature.text.toString().toDouble() >= 38.0
             ) {
                 Toast.makeText(this, "35.0以上38.0未満で入力してください", Toast.LENGTH_LONG).show()
+                nextButton.isClickable = true
             } else {
                 val intent = Intent(applicationContext, HealthActivity::class.java)
                 intent.putExtra("memberKey", memberKey)
