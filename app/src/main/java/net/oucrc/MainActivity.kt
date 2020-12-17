@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
 
                 if (memberFlag) {
                     handler.post {
-                        val intent = Intent(applicationContext, WelcomeActivity::class.java)
+                        val intent = Intent(applicationContext, BodyTemperatureActivity::class.java)
                         intent.putExtra("memberKey", member_key)
                         startActivity(intent)
                     }

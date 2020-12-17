@@ -18,7 +18,7 @@
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".WelcomeActivity"
+            android:name=".BodyTemperatureActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".HealthActivity" />
         <activity android:name=".MainActivity">
