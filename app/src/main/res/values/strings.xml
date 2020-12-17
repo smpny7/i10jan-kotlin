@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">i10jan</string>
     <string name="next_button">次へ</string>
-    <string name="thermometer_label">体温を入力してください</string>
-    <string name="body_temperature_editor">35.0 ~ 38.0</string>
+    <string name="done_button">完了</string>
+    <string name="body_temperature_label">体温を入力してください</string>
+    <string name="body_temperature_hint">35.0 ~ 38.0</string>
+    <string name="medical_consultation_label">調査にご協力ください</string>
+    <string name="medical_consultation_checkbox_1">現在の体調は良好です</string>
+    <string name="medical_consultation_checkbox_2">息苦しさなどの症状は\nありません</string>
+    <string name="medical_consultation_checkbox_3">だるさや倦怠感を\n感じることはありません</string>
 </resources>

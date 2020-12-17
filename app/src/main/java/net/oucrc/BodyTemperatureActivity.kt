@@ -53,7 +53,7 @@ class BodyTemperatureActivity : AppCompatActivity() {
             if (inputCheck(bodyTemperatureEditor.text.toString())) {
                 Toast.makeText(this, "35.0以上38.0未満で入力してください", Toast.LENGTH_LONG).show()
             } else {
-                val intent = Intent(applicationContext, HealthActivity::class.java)
+                val intent = Intent(applicationContext, MedicalConsultationActivity::class.java)
                 intent.putExtra("memberKey", memberKey)
                 intent.putExtra("bodyTemperature", bodyTemperatureEditor.text.toString())
                 startActivity(intent)

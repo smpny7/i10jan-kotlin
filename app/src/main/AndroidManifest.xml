@@ -20,7 +20,7 @@
         <activity
             android:name=".BodyTemperatureActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
-        <activity android:name=".HealthActivity" />
+        <activity android:name=".MedicalConsultationActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
