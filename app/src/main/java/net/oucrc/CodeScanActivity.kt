@@ -1,6 +1,8 @@
 package net.oucrc
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
@@ -10,16 +12,34 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
-class MainActivity : AppCompatActivity() {
-    val handler = Handler()
+@Suppress("DEPRECATION")
+class CodeScanActivity : AppCompatActivity() {
+
+    private val handler = Handler()
+    private lateinit var soundPool: SoundPool
+    private var sound = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_code_scan)
+
+        val audioAttributes: AudioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setAudioAttributes(audioAttributes)
+            .setMaxStreams(2)
+            .build()
+
+        sound = soundPool.load(this, R.raw.sound, 1)
+
 
         val integrator = IntentIntegrator(this).apply {
-            captureActivity = MyCaptureActivity::class.java
+            captureActivity = CustomCodeScanActivity::class.java
         }
+
         integrator.setOrientationLocked(false)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
         integrator.setPrompt("名札をかざしてください")
@@ -29,9 +49,6 @@ class MainActivity : AppCompatActivity() {
         integrator.setBeepEnabled(false)
         integrator.setBarcodeImageEnabled(true)
         integrator.initiateScan()
-
-        // TODO: デバッグ用->削除
-        qrScannedAction("6n8urbrrsp")
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -83,6 +100,14 @@ class MainActivity : AppCompatActivity() {
 
                 if (leftFlag) {
                     handler.post {
+                        soundPool.play(
+                            sound,
+                            1.0f,
+                            1.0f,
+                            1,
+                            0,
+                            1.0f
+                        )
                         Toast.makeText(applicationContext, "退室しました", Toast.LENGTH_LONG)
                             .show()
                     }

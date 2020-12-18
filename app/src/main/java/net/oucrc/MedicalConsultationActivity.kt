@@ -1,6 +1,8 @@
 package net.oucrc
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
 import android.widget.*
@@ -9,12 +11,29 @@ import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
 
+@Suppress("DEPRECATION")
 class MedicalConsultationActivity : AppCompatActivity() {
-    val handler = Handler()
+
+    private val handler = Handler()
+    private lateinit var soundPool: SoundPool
+    private var sound = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_medical_consultation)
+
+        val audioAttributes: AudioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setAudioAttributes(audioAttributes)
+            .setMaxStreams(2)
+            .build()
+
+        sound = soundPool.load(this, R.raw.sound, 1)
+
 
         val memberKey = intent.getStringExtra("memberKey").toString()
         val bodyTemperature = intent.getStringExtra("bodyTemperature").toString()
@@ -75,8 +94,16 @@ class MedicalConsultationActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, "サーバでエラーが発生しました", Toast.LENGTH_LONG)
                             .show()
                     } else {
+                        soundPool.play(
+                            sound,
+                            1.0f,
+                            1.0f,
+                            1,
+                            0,
+                            1.0f
+                        )
                         Toast.makeText(applicationContext, "登録しました", Toast.LENGTH_LONG).show()
-                        val intent = Intent(applicationContext, MainActivity::class.java)
+                        val intent = Intent(applicationContext, CodeScanActivity::class.java)
                         startActivity(intent)
                     }
                 }

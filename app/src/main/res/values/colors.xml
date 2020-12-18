@@ -3,7 +3,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorDisabled">#DFDFDF</color>
     <color name="colorDisabledLight">#EDEDED</color>
-    <color name="colorPrimary">#5FE8CE</color>
-    <color name="colorPrimaryLight">#99F1E0</color>
+    <color name="colorPrimary">#26DAB8</color>
+    <color name="colorPrimaryLight">#69F3D8</color>
     <color name="colorWhite">#FFFFFF</color>
 </resources>

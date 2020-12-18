@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MyCaptureActivity"
+            android:name=".CustomCodeScanActivity"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateAlwaysHidden" />
@@ -21,7 +21,7 @@
             android:name=".BodyTemperatureActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
         <activity android:name=".MedicalConsultationActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".CodeScanActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

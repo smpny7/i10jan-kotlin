@@ -3,6 +3,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
         <!-- Add Style -->
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

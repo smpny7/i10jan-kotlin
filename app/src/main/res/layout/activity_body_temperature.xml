@@ -20,21 +20,23 @@
         android:id="@+id/thermometer_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/oucrc_logo"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/thermometer" />
 
     <TextView
         android:id="@+id/body_temperature_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/body_temperature_label"
         android:textColor="@color/colorBlack"
-        android:textSize="22sp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,8 +49,8 @@
         android:layout_marginTop="4dp"
         android:digits="0123456789."
         android:ems="10"
-        android:hint="@string/body_temperature_hint"
         android:gravity="center"
+        android:hint="@string/body_temperature_hint"
         android:inputType="numberDecimal"
         android:letterSpacing="0.1"
         android:maxLength="4"
@@ -60,7 +62,7 @@
 
     <Button
         android:id="@+id/jump_to_medical_consultation_button"
-        android:layout_width="320dp"
+        android:layout_width="300dp"
         android:layout_height="50dp"
         android:background="@drawable/button_state"
         android:enabled="false"
@@ -70,8 +72,9 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.673" />
+        app:layout_constraintTop_toBottomOf="@+id/body_temperature_editor"
+        app:layout_constraintVertical_bias="0.119" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
