@@ -66,7 +66,7 @@ class MedicalConsultationActivity : AppCompatActivity() {
 
     private fun registration(member_key: String, body_temperature: String) {
         val url =
-            "https://i10jan-api-test.herokuapp.com/v1.0/registerAction?member_key=$member_key&body_temperature=$body_temperature&physical_condition=良好&stifling=なし&fatigue=なし"
+            "https://i10jan-api.herokuapp.com/v1.0/registerAction?member_key=$member_key&body_temperature=$body_temperature&physical_condition=良好&stifling=なし&fatigue=なし"
         val mimeType = MediaType.parse("application/json; charset=utf-8")
         val requestBody = RequestBody.create(mimeType, "{}")
         val request = Request.Builder().url(url).post(requestBody).build()

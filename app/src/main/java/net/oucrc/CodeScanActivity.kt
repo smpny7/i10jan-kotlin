@@ -64,7 +64,7 @@ class CodeScanActivity : AppCompatActivity() {
 
     private fun qrScannedAction(member_key: String) {
         val url =
-            "https://i10jan-api-test.herokuapp.com/v1.0/qrScannedAction?member_key=$member_key"
+            "https://i10jan-api.herokuapp.com/v1.0/qrScannedAction?member_key=$member_key"
         val mimeType = MediaType.parse("application/json; charset=utf-8")
         val requestBody = RequestBody.create(mimeType, "{}")
         val request = Request.Builder().url(url).post(requestBody).build()
